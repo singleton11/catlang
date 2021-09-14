@@ -2,16 +2,16 @@ package com.singleton11.catlang.lexer
 
 val whitespaces = setOf(' ', '\t', '\n')
 
-class Lexer(private val source: String) {
+class Lexer(private val source: String) : AutoCloseable {
     private var pos = 0
     private var line = 0
     private var col = 0
     private var current: Char = 0.toChar()
 
-    fun scan(): Pair<Collection<Token>, Collection<LexingError>> {
+    private val errors = mutableListOf<LexingError>()
+    private val tokens = mutableListOf<Token>()
 
-        val errors = mutableListOf<LexingError>()
-        val tokens = mutableListOf<Token>()
+    fun scan(): Pair<Collection<Token>, Collection<LexingError>> {
 
         while (!isEnd()) {
             current = advance()
@@ -46,17 +46,24 @@ class Lexer(private val source: String) {
         return tokens to errors
     }
 
-    fun reset() {
+    override fun close() {
         pos = 0
         line = 0
         col = 0
+
+        tokens.clear()
+        errors.clear()
     }
 
     private fun peek(until: Lexer.() -> Boolean, additionally: Lexer.() -> Unit = {}) = buildString {
-        while (until() && !isEnd()) {
+        while (until()) {
             additionally()
             append(current)
             next()
+            if (isEnd()) {
+                errors.add(LexingError("\" expected on line $line", line, col))
+                return@buildString
+            }
             current = advance()
         }
         prev()
@@ -76,5 +83,7 @@ class Lexer(private val source: String) {
 
     private fun advance() = source[pos]
 
-    data class LexingError(val message: String, val line: Int, val col: Int)
+    data class LexingError(val message: String, val line: Int, val col: Int) {
+        override fun toString() = "LexingError(message='${message.escape()}', line=$line, col=$col)"
+    }
 }

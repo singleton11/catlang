@@ -10,7 +10,10 @@ import kotlin.test.fail
 
 internal class LexerTest {
     @Test
-    fun test() = doTest("simple-positive")
+    fun testSimplePositive() = doTest("simple-positive")
+
+    @Test
+    fun testSimpleNegative() = doTest("simple-negative")
 
     private fun doTest(testName: String) {
         // Given

@@ -1,0 +1,16 @@
+(
+  first: [
+    Token(type=Identifier, value='main', line=0, col=3)
+    Token(type=LeftParen, value='(', line=0, col=4)
+    Token(type=RightParen, value=')', line=0, col=5)
+    Token(type=Whitespace, value=' ', line=0, col=6)
+    Token(type=LeftBrace, value='{', line=0, col=7)
+    Token(type=Whitespace, value='\n    ', line=1, col=4)
+    Token(type=Identifier, value='sout', line=1, col=8)
+    Token(type=LeftParen, value='(', line=1, col=9)
+    Token(type=StringLiteral, value='Hello world)\n}', line=1, col=25)
+  ]
+  second: [
+    LexingError(message='" expected on line 1', line=1, col=25)
+  ]
+)
