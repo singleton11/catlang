@@ -1,5 +1,6 @@
 package com.singleton11.catlang.lexer
 
+import com.singleton11.catlang.lexer.util.prettyPrint
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
@@ -17,7 +18,7 @@ internal class LexerTest {
 
             javaClass.classLoader.getResource("$testName.result")?.file?.let { resultFile ->
                 val expectedResult = Files.readString(Path.of(resultFile))
-                assertEquals(actualResult.toString(), expectedResult)
+                assertEquals(actualResult.prettyPrint(), expectedResult)
             }
         }
     }

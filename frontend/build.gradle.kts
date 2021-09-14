@@ -8,5 +8,6 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.apache.commons:commons-text:1.9")
     testImplementation(kotlin("test"))
 }
