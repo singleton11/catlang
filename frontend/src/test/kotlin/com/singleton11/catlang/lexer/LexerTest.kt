@@ -5,6 +5,7 @@ import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 
 internal class LexerTest {
@@ -12,14 +13,21 @@ internal class LexerTest {
     fun test() = doTest("simple-positive")
 
     private fun doTest(testName: String) {
-        javaClass.classLoader.getResource("$testName.cat")?.file?.let { sourceFile ->
-            val code = Files.readString(Path.of(sourceFile))
-            val actualResult = Lexer(code).scan()
+        // Given
+        val sourceFileName = "$testName.cat"
+        val sourceFile = javaClass.classLoader.getResource(sourceFileName)?.file
+            ?: fail("There are no source file with name $testName.cat")
+        val code = Files.readString(Path.of(sourceFile))
 
-            javaClass.classLoader.getResource("$testName.result")?.file?.let { resultFile ->
-                val expectedResult = Files.readString(Path.of(resultFile))
-                assertEquals(actualResult.prettyPrint(), expectedResult)
-            }
-        }
+        val resultFileName = "$testName.result"
+        val resultFile = javaClass.classLoader.getResource(resultFileName)?.file
+            ?: fail("There is no result file with name $testName.result")
+        val expectedResult = Files.readString(Path.of(resultFile))
+
+        // When
+        val actualResult = Lexer(code).scan()
+
+        // Then
+        assertEquals(expectedResult, actualResult.prettyPrint())
     }
 }
